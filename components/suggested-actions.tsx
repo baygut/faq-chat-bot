@@ -1,64 +1,99 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { Button } from './ui/button';
-import { ChatRequestOptions, CreateMessage, Message } from 'ai';
-import { memo } from 'react';
+import { motion } from "framer-motion";
+import { Button } from "./ui/button";
+import { ChatRequestOptions, CreateMessage, Message } from "ai";
+import { memo, useEffect, useState } from "react";
+import useSWR from "swr";
 
 interface SuggestedActionsProps {
-  chatId: string;
-  append: (
-    message: Message | CreateMessage,
-    chatRequestOptions?: ChatRequestOptions,
-  ) => Promise<string | null | undefined>;
+    chatId: string;
+    append: (
+        message: Message | CreateMessage,
+        chatRequestOptions?: ChatRequestOptions
+    ) => Promise<string | null | undefined>;
+    isLoading?: boolean;
+    messages?: Message[];
 }
 
-function PureSuggestedActions({ chatId, append }: SuggestedActionsProps) {
-  const suggestedActions = [
-    {
-      title: 'What is the weather',
-      label: 'in San Francisco?',
-      action: 'What is the weather in San Francisco?',
-    },
-    {
-      title: 'Help me draft an essay',
-      label: 'about Silicon Valley',
-      action: 'Help me draft a short essay about Silicon Valley',
-    },
-  ];
+function PureSuggestedActions({
+    chatId,
+    append,
+    isLoading = false,
+    messages = [],
+}: SuggestedActionsProps) {
+    const { data, error } = useSWR("/api/faq", async () => {
+        const response = await fetch("/api/faq");
+        if (!response.ok) {
+            throw new Error("Failed to fetch FAQs");
+        }
+        const data = await response.json();
+        return data.faqs;
+    });
 
-  return (
-    <div className="grid sm:grid-cols-2 gap-2 w-full">
-      {suggestedActions.map((suggestedAction, index) => (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
-          transition={{ delay: 0.05 * index }}
-          key={`suggested-action-${suggestedAction.title}-${index}`}
-          className={index > 1 ? 'hidden sm:block' : 'block'}
-        >
-          <Button
-            variant="ghost"
-            onClick={async () => {
-              window.history.replaceState({}, '', `/chat/${chatId}`);
+    const handleFaqClick = async (question: string) => {
+        if (isLoading) return;
 
-              append({
-                role: 'user',
-                content: suggestedAction.action,
-              });
-            }}
-            className="text-left border rounded-xl px-4 py-3.5 text-sm flex-1 gap-1 sm:flex-col w-full h-auto justify-start items-start"
-          >
-            <span className="font-medium">{suggestedAction.title}</span>
-            <span className="text-muted-foreground">
-              {suggestedAction.label}
-            </span>
-          </Button>
-        </motion.div>
-      ))}
-    </div>
-  );
+        await append({
+            role: "user",
+            content: question,
+        });
+
+        const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                messages: [],
+                tool_name: "answerFaq",
+                tool_args: { question },
+            }),
+        });
+
+        const responseData = await response.json();
+        if (responseData.success) {
+            await append({
+                role: "assistant",
+                content: responseData.answer,
+            });
+        }
+    };
+
+    // Don't show FAQs if there are messages or no FAQs available
+    if (messages.length > 0 || !data?.length) {
+        return null;
+    }
+
+    if (error) {
+        return (
+            <div className="flex flex-col space-y-2 w-full rounded-lg bg-muted p-4">
+                <h3 className="text-sm font-semibold">
+                    Error fetching FAQ suggestions
+                </h3>
+                <p>{error.message}</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="flex flex-col space-y-2 w-full rounded-lg bg-muted p-4">
+            <h3 className="text-sm font-semibold">
+                Frequently Asked Questions
+            </h3>
+            <div className="flex flex-wrap gap-2">
+                {data.map((faq: { question: string }, index: number) => (
+                    <Button
+                        key={index}
+                        onClick={() => handleFaqClick(faq.question)}
+                        variant="default"
+                        className="rounded-full"
+                        disabled={isLoading}
+                    >
+                        {faq.question}
+                    </Button>
+                ))}
+            </div>
+        </div>
+    );
 }
 
 export const SuggestedActions = memo(PureSuggestedActions, () => true);

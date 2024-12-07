@@ -15,6 +15,8 @@ import {
   type Message,
   message,
   vote,
+  faq,
+  type Faq,
 } from './schema';
 
 // Optionally, if not using email/pass login, you can
@@ -321,6 +323,58 @@ export async function updateChatVisiblityById({
     return await db.update(chat).set({ visibility }).where(eq(chat.id, chatId));
   } catch (error) {
     console.error('Failed to update chat visibility in database');
+    throw error;
+  }
+}
+
+export async function saveFaq({
+  question,
+  answer,
+  category,
+}: {
+  question: string;
+  answer: string;
+  category?: string;
+}) {
+  try {
+    return await db.insert(faq).values({
+      question,
+      answer,
+      category,
+      createdAt: new Date(),
+    });
+  } catch (error) {
+    console.error('Failed to save FAQ');
+    throw error;
+  }
+}
+
+export async function getFaqAnswer({
+  question,
+}: {
+  question: string;
+}): Promise<Array<Faq>> {
+  try {
+    // Return all FAQs instead of exact match
+    return await db
+      .select()
+      .from(faq)
+      .orderBy(desc(faq.createdAt));
+  } catch (error) {
+    console.error('Failed to get FAQ answers');
+    throw error;
+  }
+}
+
+export async function getFaqSuggestions(): Promise<Array<Faq>> {
+  try {
+    return await db
+      .select()
+      .from(faq)
+      .orderBy(desc(faq.createdAt))
+      .limit(5);
+  } catch (error) {
+    console.error('Failed to get FAQ suggestions from database');
     throw error;
   }
 }
