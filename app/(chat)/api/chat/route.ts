@@ -1,8 +1,8 @@
 import {
-    CoreAssistantMessage,
-    CoreSystemMessage,
-    CoreToolMessage,
-    CoreUserMessage,
+    type CoreAssistantMessage,
+    type CoreSystemMessage,
+    type CoreToolMessage,
+    type CoreUserMessage,
     type Message,
     StreamData,
     convertToCoreMessages,

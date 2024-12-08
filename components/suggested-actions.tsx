@@ -1,9 +1,7 @@
 "use client";
-
-import { motion } from "framer-motion";
 import { Button } from "./ui/button";
-import { ChatRequestOptions, CreateMessage, Message } from "ai";
-import { memo, useEffect, useState } from "react";
+import type { ChatRequestOptions, CreateMessage, Message } from "ai";
+import { memo, } from "react";
 import useSWR from "swr";
 
 interface SuggestedActionsProps {
