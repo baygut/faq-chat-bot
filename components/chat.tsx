@@ -146,12 +146,13 @@ export function Chat({
                                 <div className="flex flex-wrap gap-2">
                                     {faqSuggestions.map((suggestion, index) => (
                                         <button
-                                            key={index}
+                                            key={suggestion.question}
                                             onClick={() =>
                                                 handleFaqClick(
                                                     suggestion.question
                                                 )
                                             }
+                                            type="button"
                                             className="rounded-full bg-primary px-3 py-1 text-sm text-primary-foreground hover:bg-primary/90"
                                         >
                                             {suggestion.question}

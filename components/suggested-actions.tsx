@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "./ui/button";
 import type { ChatRequestOptions, CreateMessage, Message } from "ai";
-import { memo, } from "react";
+import { memo } from "react";
 import useSWR from "swr";
 
 interface SuggestedActionsProps {
@@ -78,9 +78,9 @@ function PureSuggestedActions({
                 Frequently Asked Questions
             </h3>
             <div className="flex flex-wrap gap-2">
-                {data.map((faq: { question: string }, index: number) => (
+                {data.map((faq: { question: string; id: string }) => (
                     <Button
-                        key={index}
+                        key={faq.id}
                         onClick={() => handleFaqClick(faq.question)}
                         variant="default"
                         className="rounded-full"
