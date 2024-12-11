@@ -9,6 +9,25 @@ export const metadata: Metadata = {
     metadataBase: new URL("https://faq-chat-bot.vercel.app/"),
     title: "Chanswer",
     description: "Chat + Answer = Chanswer",
+    icons: {
+        icon: "/logo.png",
+        shortcut: "/logo.png",
+        apple: "/logo.png",
+    },
+    openGraph: {
+        images: [
+            {
+                url: "/logo.png",
+                width: 800,
+                height: 200,
+                alt: "Chanswer Logo",
+            },
+        ],
+    },
+    twitter: {
+        card: "summary_large_image",
+        images: ["/logo.png"],
+    },
 };
 
 export const viewport = {
