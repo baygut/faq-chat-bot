@@ -47,7 +47,6 @@ export function Chat({
         id,
         body: { id, modelId: selectedModelId },
         initialMessages,
-        api: "/api/chat",
     });
 
     useEffect(() => {
@@ -61,50 +60,6 @@ export function Chat({
             });
         }
     }, []);
-
-    // Fetch FAQ suggestions when component mounts
-    useState(async () => {
-        const response = await fetch("/api/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                messages: [],
-                tool_name: "getFaqSuggestions",
-                tool_args: {},
-            }),
-        });
-        const data = await response.json();
-        if (data.success && data.suggestions) {
-            setFaqSuggestions(data.suggestions);
-        }
-    });
-
-    const handleFaqClick = async (question: string) => {
-        if (isLoading) return;
-
-        await append({
-            role: "user",
-            content: question,
-        });
-
-        const response = await fetch("/api/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                messages: [],
-                tool_name: "answerFaq",
-                tool_args: { question },
-            }),
-        });
-
-        const data = await response.json();
-        if (data.success) {
-            await append({
-                role: "assistant",
-                content: data.answer,
-            });
-        }
-    };
 
     const { width: windowWidth = 1920, height: windowHeight = 1080 } =
         useWindowSize();
@@ -147,31 +102,6 @@ export function Chat({
                         reload={reload}
                         isReadonly={isReadonly}
                     />
-                    {faqSuggestions.length > 0 &&
-                        !isLoading &&
-                        messages.length === 0 && (
-                            <div className="absolute bottom-20 inset-x-4 flex flex-col space-y-2 rounded-lg bg-muted p-4">
-                                <h3 className="text-sm font-semibold">
-                                    Frequently Asked Questions
-                                </h3>
-                                <div className="flex flex-wrap gap-2">
-                                    {faqSuggestions.map((suggestion, index) => (
-                                        <button
-                                            key={suggestion.question}
-                                            onClick={() =>
-                                                handleFaqClick(
-                                                    suggestion.question
-                                                )
-                                            }
-                                            type="button"
-                                            className="rounded-full bg-primary px-3 py-1 text-sm text-primary-foreground hover:bg-primary/90"
-                                        >
-                                            {suggestion.question}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
                 </div>
 
                 <form className="flex mx-auto px-4 bg-background pb-4 md:pb-6 gap-2 w-full md:max-w-3xl">

@@ -29,33 +29,6 @@ function PureSuggestedActions({
         return data.faqs;
     });
 
-    const handleFaqClick = async (question: string) => {
-        if (isLoading) return;
-
-        await append({
-            role: "user",
-            content: question,
-        });
-
-        const response = await fetch("/api/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                messages: [],
-                tool_name: "answerFaq",
-                tool_args: { question },
-            }),
-        });
-
-        const responseData = await response.json();
-        if (responseData.success) {
-            await append({
-                role: "assistant",
-                content: responseData.answer,
-            });
-        }
-    };
-
     // Don't show FAQs if there are messages or no FAQs available
     if (messages.length > 0 || !data?.length) {
         return null;
