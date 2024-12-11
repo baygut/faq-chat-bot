@@ -3,8 +3,9 @@
 import type { Attachment, Message } from "ai";
 import { useChat } from "ai/react";
 import { AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useWindowSize } from "usehooks-ts";
+import { toast } from "sonner";
 
 import { ChatHeader } from "@/components/chat-header";
 
@@ -46,10 +47,19 @@ export function Chat({
         id,
         body: { id, modelId: selectedModelId },
         initialMessages,
-        onFinish: () => {
-            // Removed history mutation
-        },
     });
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const faqQuestion = params.get("faq");
+
+        if (faqQuestion && messages.length === 0) {
+            append({
+                role: "user",
+                content: decodeURIComponent(faqQuestion),
+            });
+        }
+    }, []);
 
     // Fetch FAQ suggestions when component mounts
     useState(async () => {
