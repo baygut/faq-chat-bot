@@ -63,7 +63,7 @@ export const Overview = () => {
                     and{" "}
                     <Link
                         className="font-medium underline underline-offset-4"
-                        href="https://github.com/baygut"
+                        href="https://github.com/metehaninal"
                         target="_blank"
                     >
                         Metehan Inal
