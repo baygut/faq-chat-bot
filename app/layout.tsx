@@ -7,8 +7,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
     metadataBase: new URL("https://faq-chat-bot.vercel.app/"),
-    title: "Faq ChatBot Project for CSE474",
-    description: "Built with OpenAI GPT-4o and Next.js",
+    title: "Chanswer",
+    description: "Chat + Answer = Chanswer",
 };
 
 export const viewport = {
