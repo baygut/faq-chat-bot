@@ -73,24 +73,25 @@ function PureSuggestedActions({
     }
 
     return (
-        <div className="flex flex-col space-y-2 w-full rounded-lg bg-muted p-4">
-            <h3 className="text-sm font-semibold">
-                Frequently Asked Questions
-            </h3>
-            <div className="flex flex-wrap gap-2">
-                {data.map((faq: { question: string; id: string }) => (
-                    <Button
-                        key={faq.id}
-                        onClick={() => handleFaqClick(faq.question)}
-                        variant="default"
-                        className="rounded-full"
-                        disabled={isLoading}
-                    >
-                        {faq.question}
-                    </Button>
-                ))}
-            </div>
-        </div>
+        <></>
+        // <div className="flex flex-col space-y-2 w-full rounded-lg bg-muted p-4">
+        //     {/* <h3 className="text-sm font-semibold">
+        //         Frequently Asked Questions
+        //     </h3>
+        //     <div className="flex flex-wrap gap-2">
+        //         {data.map((faq: { question: string; id: string }) => (
+        //             <Button
+        //                 key={faq.id}
+        //                 onClick={() => handleFaqClick(faq.question)}
+        //                 variant="default"
+        //                 className="rounded-full"
+        //                 disabled={isLoading}
+        //             >
+        //                 {faq.question}
+        //             </Button>
+        //         ))}
+        //     </div> */}
+        // </div>
     );
 }
 

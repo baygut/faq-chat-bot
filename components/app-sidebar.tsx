@@ -3,6 +3,7 @@
 import type { User } from "next-auth";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 import { PlusIcon } from "@/components/icons";
 import { SidebarUserNav } from "@/components/sidebar-user-nav";
@@ -21,6 +22,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 interface FaqSuggestion {
     question: string;
     category?: string;
+    id: string;
 }
 
 export function AppSidebar({ user }: { user: User | undefined }) {
@@ -67,9 +69,15 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                             }}
                             className="flex flex-row gap-3 items-center"
                         >
-                            <span className="text-lg font-semibold px-2 hover:bg-muted rounded-md cursor-pointer">
-                                Chatbot
-                            </span>
+                            <div className="relative w-48 h-12">
+                                <Image
+                                    src="/logo.png"
+                                    alt="Chanswer Logo"
+                                    fill
+                                    className="object-contain"
+                                    priority
+                                />
+                            </div>
                         </Link>
                         <Tooltip>
                             <TooltipTrigger asChild>
@@ -100,7 +108,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                     <div className="flex flex-col gap-2">
                         {faqSuggestions.map((suggestion) => (
                             <button
-                                key={suggestion.question}
+                                key={suggestion.id}
                                 onClick={() =>
                                     handleFaqClick(suggestion.question)
                                 }
