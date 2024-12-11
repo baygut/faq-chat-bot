@@ -9,7 +9,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
-    metadataBase: new URL("https://faq-chat-bot.vercel.app/"),
+    metadataBase: new URL("https://chanswer.vercel.app/"),
     title: "Chanswer",
     description: "Chat + Answer = Chanswer",
     icons: {
