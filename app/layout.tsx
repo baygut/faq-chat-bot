@@ -5,6 +5,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 
 import "./globals.css";
 
+import { SpeedInsights } from "@vercel/speed-insights/next";
+
 export const metadata: Metadata = {
     metadataBase: new URL("https://faq-chat-bot.vercel.app/"),
     title: "Chanswer",
@@ -76,6 +78,7 @@ export default async function RootLayout({
                 />
             </head>
             <body className="antialiased">
+                <SpeedInsights />
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="system"
