@@ -47,6 +47,7 @@ export function Chat({
         id,
         body: { id, modelId: selectedModelId },
         initialMessages,
+        api: "/api/chat",
     });
 
     useEffect(() => {
